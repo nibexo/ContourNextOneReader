@@ -1,6 +1,7 @@
 package com.lady.viktoria.contournextonereader;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,11 +15,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.lady.viktoria.contournextonereader.services.BGMeterGattService;
+import com.lady.viktoria.contournextonereader.services.GattAttributes;
+
+import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends Activity implements View.OnClickListener {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     Button btnAct;
+    Button btnGet;
     TextView bgmac;
     Bundle b;
     public String deviceBTMAC;
@@ -72,8 +78,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btnAct = (Button) findViewById(R.id.listpaireddevices);
+        btnGet = (Button) findViewById(R.id.buttonGet);
         bgmac = (TextView)findViewById(R.id.bgmac);
         btnAct.setOnClickListener(this);
+        btnGet.setOnClickListener(this);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         Intent gattServiceIntent = new Intent(this, BGMeterGattService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
@@ -135,6 +143,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Intent intent = new Intent (this, BGMeterActivity.class);
                 startActivity (intent);
                 break;
+            case R.id.buttonGet:
+                Log.e(TAG,"Result: \n\n\n\n");
+                List<BluetoothGattCharacteristic> readCharacteristics =
+                        mBGMeterGattService.readCharacteristics();
+
+                Log.e(TAG,"Result2: \n\n\n\n" + readCharacteristics.size());
+                for (BluetoothGattCharacteristic characteristic : readCharacteristics) {
+                    if(characteristic.getUuid().equals(UUID.fromString(GattAttributes.BG_MEASUREMENT))) {
+                        Log.e(TAG,"ResultChar: \n\n\n\n" + characteristic.getUuid());
+                        GlucoseReadingRx gtb = new GlucoseReadingRx(characteristic.getValue());
+                        Log.d(TAG,"Result: "+gtb.toString());
+
+                    } else {
+                        Log.w(TAG,"ResultChar: \n\n\n\n" + characteristic.getUuid());
+                    }
+                }
+
+//                Log.e(TAG,"Result2: \n\n\n\n"+readCharacteristics.get(1).getValue());
+//                readCharacteristics.get(1).getValue();
+//                GlucoseReadingRx gtb = new GlucoseReadingRx(readCharacteristics.get(0).getValue());
+//                Log.d(TAG,"Result: "+gtb.toString());
+
+
+//                intent.putExtra(EXTRA_DATA, gtb.toStringFormatted());
             default:
                 break;
         }

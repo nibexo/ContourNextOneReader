@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Class used to show read data from Glucometer
+ */
 public class AndroidBluetooth extends Activity {
 
     private static final int REQUEST_ENABLE_BT = 1;

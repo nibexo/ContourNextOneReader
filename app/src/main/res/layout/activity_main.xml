@@ -17,7 +17,17 @@
         android:text="Connect to Paired Device"
         android:enabled="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignStart="@+id/connection_state" />
+
+    <Button
+        android:id="@+id/buttonGet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bgmac"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:enabled="true"
+        android:text="Get Data" />
 
     <TextView
         android:text="@string/disconnected"

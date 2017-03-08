@@ -251,12 +251,34 @@ public class BGMeterGattService extends Service{
      *
      * @param characteristic The characteristic to read from.
      */
+    //todo: check
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+        if (characteristic == null ) {
+            characteristic = mBluetoothGatt
+                    .getService(UUID.fromString(GattAttributes.BG_SERVICE))
+                    .getCharacteristic(UUID.fromString(GattAttributes.BG_MEASUREMENT));
+        }
+
         mBluetoothGatt.readCharacteristic(characteristic);
+    }
+
+    public List<BluetoothGattCharacteristic> readCharacteristics() {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return null;
+        }
+        List<BluetoothGattCharacteristic> readCharacteristics = mBluetoothGatt
+                    .getService(UUID.fromString(GattAttributes.BG_SERVICE))
+                    .getCharacteristics();
+
+
+//            broadcastUpdate(ACTION_DATA_AVAILABLE, readCharacteristics.get(0));
+        return readCharacteristics;
+
     }
 
     /**

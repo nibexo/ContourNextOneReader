@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.Set;
 
+/**
+ * This class is used to choose BT device to connect
+ */
 public class BGMeterActivity extends ListActivity {
 
     @Override
